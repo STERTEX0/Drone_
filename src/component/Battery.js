@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useWebSocket } from "../context/WebSocketContext";
 import "./Battery.css";
 
@@ -8,7 +8,7 @@ const Battery = () => {
   const [batteryCells, setBatteryCells] = useState([]); // To hold battery cell data
   const [hoveredCell, setHoveredCell] = useState(null); // Track which cell is hovered
   const [totalVoltage, setTotalVoltage] = useState(0); // New state for total voltage
-  const [alertEnabled, setAlertEnabled] = useState(true); // Track if alert is enabled
+  const [hasLowPercentageCell, setHasLowPercentageCell] = useState(false); // Track if there's a low percentage cell
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -28,16 +28,7 @@ const Battery = () => {
               .filter(cell => cell.percentage < 5)
               .map(cell => `Cell ${cell.cell} is below 5%`);
 
-            if (lowPercentageCells.length > 0 && alertEnabled) {
-              // Show alert for low percentage cells
-              alert(`Warning: ${lowPercentageCells.join(", ")}`);
-              
-              // Disable alert for 30 seconds
-              setAlertEnabled(false);
-              setTimeout(() => {
-                setAlertEnabled(true);
-              }, 30000); // 30 seconds delay
-            }
+            setHasLowPercentageCell(lowPercentageCells.length > 0); // Update the state based on low percentage cells
           }
         }
       } catch (error) {
@@ -51,7 +42,7 @@ const Battery = () => {
         ws.removeEventListener("message", handleMessage);
       };
     }
-  }, [ws, alertEnabled]);
+  }, [ws]);
 
   return (
     <div className="battery-container">
@@ -59,7 +50,7 @@ const Battery = () => {
         {totalVoltage}V
       </span>
       <div
-        className="battery-icon"
+        className={`battery-icon ${hasLowPercentageCell ? "battery-icon-warning" : ""}`}
         onMouseEnter={() => setHoveredCell(true)}
         onMouseLeave={() => setHoveredCell(false)}
       >
