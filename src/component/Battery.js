@@ -7,6 +7,7 @@ const Battery = () => {
   const [batteryPercentage, setBatteryPercentage] = useState(100); // Default to 100%
   const [batteryCells, setBatteryCells] = useState([]); // To hold battery cell data
   const [hoveredCell, setHoveredCell] = useState(null); // Track which cell is hovered
+  const [totalVoltage, setTotalVoltage] = useState(0); // New state for total voltage
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -19,23 +20,17 @@ const Battery = () => {
           if (data.total_voltage_percentage !== null) {
             setBatteryPercentage(data.total_voltage_percentage);
             setBatteryCells(data.battery || []); // Update battery cells data
+            setTotalVoltage(data.total_voltage || 0); // Update total voltage
 
             // Check for percentage deviations in cells
             const lowPercentageCells = data.battery
               .filter(cell => cell.percentage < 5)
               .map(cell => `Cell ${cell.cell} is below 5%`);
-            const highPercentageCells = data.battery
-              .filter(cell => cell.percentage > 95)
-              .map(cell => `Cell ${cell.cell} is above 95%`);
             
-            if (lowPercentageCells.length > 0 || highPercentageCells.length > 0) {
+            if (lowPercentageCells.length > 0 ) {
               // Show alert for low percentage cells
               if (lowPercentageCells.length > 0) {
                 alert(`Warning: ${lowPercentageCells.join(", ")}`);
-              }
-              // Show alert for high percentage cells
-              if (highPercentageCells.length > 0) {
-                alert(`Warning: ${highPercentageCells.join(", ")}`);
               }
             }
           }
@@ -55,6 +50,9 @@ const Battery = () => {
 
   return (
     <div className="battery-container">
+      <span className="total-voltage">
+        {totalVoltage}V
+      </span>
       <div
         className="battery-icon"
         onMouseEnter={() => setHoveredCell(true)}

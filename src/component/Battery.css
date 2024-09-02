@@ -36,7 +36,7 @@
 }
 
 .battery-percentage {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #000000;
   z-index: 4;
 }
