@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { useWebSocket } from "../context/WebSocketContext";
 import "./Battery.css";
 
@@ -8,6 +8,7 @@ const Battery = () => {
   const [batteryCells, setBatteryCells] = useState([]); // To hold battery cell data
   const [hoveredCell, setHoveredCell] = useState(null); // Track which cell is hovered
   const [totalVoltage, setTotalVoltage] = useState(0); // New state for total voltage
+  const [alertEnabled, setAlertEnabled] = useState(true); // Track if alert is enabled
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -15,7 +16,7 @@ const Battery = () => {
         const message = event.data.replace(/^Message: /, "").replace(/'/g, '"');
         if (message.startsWith("{") && message.endsWith("}")) {
           const data = JSON.parse(message);
-          
+
           // Handle battery data
           if (data.total_voltage_percentage !== null) {
             setBatteryPercentage(data.total_voltage_percentage);
@@ -26,12 +27,16 @@ const Battery = () => {
             const lowPercentageCells = data.battery
               .filter(cell => cell.percentage < 5)
               .map(cell => `Cell ${cell.cell} is below 5%`);
-            
-            if (lowPercentageCells.length > 0 ) {
+
+            if (lowPercentageCells.length > 0 && alertEnabled) {
               // Show alert for low percentage cells
-              if (lowPercentageCells.length > 0) {
-                alert(`Warning: ${lowPercentageCells.join(", ")}`);
-              }
+              alert(`Warning: ${lowPercentageCells.join(", ")}`);
+              
+              // Disable alert for 30 seconds
+              setAlertEnabled(false);
+              setTimeout(() => {
+                setAlertEnabled(true);
+              }, 30000); // 30 seconds delay
             }
           }
         }
@@ -46,7 +51,7 @@ const Battery = () => {
         ws.removeEventListener("message", handleMessage);
       };
     }
-  }, [ws]);
+  }, [ws, alertEnabled]);
 
   return (
     <div className="battery-container">
@@ -66,9 +71,9 @@ const Battery = () => {
           <div className="battery-tooltip">
             {batteryCells.map(cell => (
               <div key={cell.cell} className="battery-tooltip-cell">
-                <div>Cell {cell.cell}:</div>
-                <div>Voltage: {cell.voltage}V</div>
-                <div>Percentage: {cell.percentage}%</div>
+                <div>Cell {cell.cell}:
+                Voltage: {cell.voltage}V
+                Percentage: {cell.percentage}%</div>
               </div>
             ))}
           </div>
