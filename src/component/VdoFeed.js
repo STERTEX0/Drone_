@@ -1,47 +1,40 @@
-import React, { useRef, useEffect } from "react";
-import Hls from "hls.js";
-import { useWebSocket } from "../context/WebSocketContext";
-import "./VdoFeed.css";
+import React, { useEffect, useRef } from "react";
+import JSMpeg from "@cycjimmy/jsmpeg-player";
+import "./VdoFeed.css"; // Ensure you import the CSS file
 
 const VdoFeed = () => {
-  const videoRef = useRef(null);
-  const { ws } = useWebSocket();
+  const canvasRef = useRef(null);
+  const playerRef = useRef(null);
 
   useEffect(() => {
-    if (Hls.isSupported() && videoRef.current) {
-      const hls = new Hls();
-      hls.loadSource("http://1.4.213.19:1929/live/TV73R-M7-64_872-IPT.stream_720p/playlist.m3u8");
-      hls.attachMedia(videoRef.current);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        videoRef.current.play().catch(error => {
-          console.error('Error playing video:', error);
-        });
-      });
-    } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-      videoRef.current.src = "http://1.4.213.19:1929/live/TV73R-M7-64_872-IPT.stream_720p/playlist.m3u8";
-      videoRef.current.play().catch(error => {
-        console.error('Error playing video:', error);
-      });
-    }
+    // Start the video stream when the component mounts
+    playerRef.current = new JSMpeg.Player('ws://10.8.8.41:9999', {
+      canvas: canvasRef.current,
+    });
+
+    return () => {
+      // Stop the video stream when the component unmounts
+      if (playerRef.current) {
+        playerRef.current.stop();
+      }
+    };
   }, []);
 
-  useEffect(() => {
-    if (ws) {
-      ws.onmessage = (event) => {
-        // Handle WebSocket messages if needed
-        // console.log('WebSocket message received:', event.data);
-        // For example, you might use this to control the video stream or handle other data
-      };
-
-      return () => {
-        ws.onmessage = null;
-      };
+  // Method to refresh (stop and start) the video stream
+  const refreshVideo = () => {
+    if (playerRef.current) {
+      playerRef.current.stop(); // Stop the current stream
+      playerRef.current.play(); // Immediately start it again
     }
-  }, [ws]);
+  };
 
   return (
     <div className="full-screen-video-container">
-      <video className="video-feed" ref={videoRef} autoPlay muted controls></video>
+      <canvas ref={canvasRef} id="canvas"></canvas>
+    
+      <div className="controls">
+        <button onClick={refreshVideo}>Refresh</button>
+      </div>
     </div>
   );
 };
