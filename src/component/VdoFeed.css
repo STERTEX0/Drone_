@@ -1,0 +1,34 @@
+/* VdoFeed.css */
+
+.full-screen-video-container {
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.video-feed {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Maintain aspect ratio and fit within the container */
+}
+
+@media (max-width: 768px) {
+  .video-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 480px) {
+  .video-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
