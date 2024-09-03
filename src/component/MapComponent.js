@@ -75,7 +75,7 @@ const MapComponent = () => {
 
   return (
     <Card className="map-card">
-      <LoadScript googleMapsApiKey="AIzaSyB4nXk5bJajZVx1OWN4esLGd5GQxmwb10M">
+      <LoadScript googleMapsApiKey="google api">
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={position}
