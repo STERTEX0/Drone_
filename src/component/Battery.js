@@ -6,8 +6,8 @@ const Battery = () => {
   const { ws } = useWebSocket();
   const [batteryPercentage, setBatteryPercentage] = useState(100); // Default to 100%
   const [batteryCells, setBatteryCells] = useState([]); // To hold battery cell data
-  const [hoveredCell, setHoveredCell] = useState(null); // Track which cell is hovered
-  const [totalVoltage, setTotalVoltage] = useState(0); // New state for total voltage
+  const [hoveredCell, setHoveredCell] = useState(false); // Track if any cell is hovered
+  const [totalVoltage, setTotalVoltage] = useState(0); // Default to 0
   const [hasLowPercentageCell, setHasLowPercentageCell] = useState(false); // Track if there's a low percentage cell
 
   useEffect(() => {
@@ -19,14 +19,20 @@ const Battery = () => {
 
           // Handle battery data
           if (data.total_voltage_percentage !== null) {
-            setBatteryPercentage(data.total_voltage_percentage);
+            setBatteryPercentage(
+              data.total_voltage_percentage !== null
+                ? data.total_voltage_percentage
+                : "N/A"
+            );
             setBatteryCells(data.battery || []); // Update battery cells data
-            setTotalVoltage(data.total_voltage || 0); // Update total voltage
+            setTotalVoltage(
+              data.total_voltage !== null ? data.total_voltage : "N/A"
+            ); // Update total voltage
 
             // Check for percentage deviations in cells
             const lowPercentageCells = data.battery
-              .filter(cell => cell.percentage < 5)
-              .map(cell => `Cell ${cell.cell} is below 5%`);
+              .filter((cell) => cell.percentage < 5)
+              .map((cell) => `Cell ${cell.cell} is below 5%`);
 
             setHasLowPercentageCell(lowPercentageCells.length > 0); // Update the state based on low percentage cells
           }
@@ -47,7 +53,7 @@ const Battery = () => {
   return (
     <div className="battery-container">
       <span className="total-voltage">
-        {totalVoltage}V
+        {totalVoltage !== null ? `${totalVoltage}V` : "N/A"}
       </span>
       <div
         className={`battery-icon ${hasLowPercentageCell ? "battery-icon-warning" : ""}`}
@@ -56,22 +62,36 @@ const Battery = () => {
       >
         <div
           className="battery-level"
-          style={{ width: `${batteryPercentage}%` }}
+          style={{
+            width:
+              typeof batteryPercentage === "number"
+                ? `${batteryPercentage}%`
+                : "0%",
+          }}
         ></div>
         {hoveredCell && (
           <div className="battery-tooltip">
-            {batteryCells.map(cell => (
-              <div key={cell.cell} className="battery-tooltip-cell">
-                <div>Cell {cell.cell}:
-                Voltage: {cell.voltage}V
-                Percentage: {cell.percentage}%</div>
+            {batteryCells.length === 0 ? (
+              <div>
+                <div>Cell N/A: Voltage: N/A Percentage: N/A%</div>
               </div>
-            ))}
+            ) : (
+              batteryCells.map((cell) => (
+                <div key={cell.cell} className="battery-tooltip-cell">
+                  <div>
+                    Cell {cell.cell}: Voltage: {cell.voltage}V Percentage:{" "}
+                    {cell.percentage}%
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
       </div>
       <span className="battery-percentage">
-        {Math.floor(batteryPercentage)}%
+        {batteryPercentage !== null
+          ? `${Math.floor(batteryPercentage)}%`
+          : "N/A"}
       </span>
     </div>
   );

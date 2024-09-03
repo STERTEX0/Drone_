@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useWebSocket } from "../context/WebSocketContext";
 import "./ServoControl.css";
 
-const ServoControl = () => {
+const ServoControl = ({ onRefresh }) => {
   const { ws } = useWebSocket();
   const [intervalId, setIntervalId] = useState(null);
 
@@ -17,7 +17,7 @@ const ServoControl = () => {
   const handleMouseDown = (command) => {
     const id = setInterval(() => {
       sendCommand(command);
-    }, 100); // Send command every 100ms
+    }, 100); // ส่งคำสั่งทุก 100ms
     setIntervalId(id);
   };
 
@@ -62,13 +62,13 @@ const ServoControl = () => {
             className="btn btn-primary"
             onClick={() => sendCommand("upmax")}
           >
-            Upmax
+            สูงสุด
           </button>
           <button
             className="btn btn-primary"
             onClick={() => sendCommand("downmax")}
           >
-            Downmax
+            ต่ำสุด
           </button>
         </div>
         <div className="extreme-buttons">
@@ -76,14 +76,17 @@ const ServoControl = () => {
             className="btn btn-primary"
             onClick={() => sendCommand("on")}
           >
-            on
+            เปิด
           </button>
           <button
             className="btn btn-primary"
             onClick={() => sendCommand("off")}
           >
-            off
+            ปิด
           </button>
+        </div>
+        <div className="refresh-button">
+          <button onClick={onRefresh}>รีเฟรช</button>
         </div>
       </div>
     </div>

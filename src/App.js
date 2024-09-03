@@ -6,7 +6,8 @@ import Log from "./component/Log";
 import VdoFeed from './component/VdoFeed';
 import "./App.css";
 import Battery from "./component/Battery";
-// import test from "./component/test";
+import StatusCard from "./component/StatusCard";
+import MapComponent from "./component/MapComponent";
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
           <Log />
           <Battery />
           <VdoFeed />
-          {/* <test /> */}
+          <StatusCard />
+          <MapComponent />
         </div>
       </div>
     </WebSocketProvider>

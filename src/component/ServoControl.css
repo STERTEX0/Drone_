@@ -33,7 +33,7 @@
   gap: 1px;
   align-items: center;
   justify-content: space-between; /* Distributes space between buttons */
-  width: 250px; /* Full width of the container */
+  width: 150px; 
 }
 
 .extreme-buttons button {
@@ -58,4 +58,30 @@
 
 .btn:hover {
   opacity: 0.8; /* Slightly faded on hover */
+}
+
+
+.refresh-button {
+  display: flex;
+  justify-content: center;
+}
+
+.refresh-button button {
+  width: 70px; /* ปรับขนาดความกว้าง */
+  height: 39px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 5px; /* มุมโค้ง */
+  cursor: pointer;
+  background-color: #007bff; /* สีฟ้าหลัก */
+  color: white;
+  font-size: 1em;
+}
+
+.refresh-button button:hover {
+  opacity: 0.8; /* ลดความเข้มข้นเมื่อชี้เมาส์ */
+  background-color: #005bbd
 }

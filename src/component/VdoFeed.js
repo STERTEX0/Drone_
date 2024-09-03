@@ -1,40 +1,40 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import JSMpeg from "@cycjimmy/jsmpeg-player";
-import "./VdoFeed.css"; // Ensure you import the CSS file
+import ServoControl from "./ServoControl";
+import "./VdoFeed.css";
 
 const VdoFeed = () => {
   const canvasRef = useRef(null);
   const playerRef = useRef(null);
+  const [blink, setBlink] = useState(false);
 
   useEffect(() => {
-    // Start the video stream when the component mounts
+    // เริ่มสตรีมวิดีโอเมื่อคอมโพเนนต์ถูกติดตั้ง
     playerRef.current = new JSMpeg.Player('ws://10.8.8.41:9999', {
       canvas: canvasRef.current,
     });
 
     return () => {
-      // Stop the video stream when the component unmounts
+      // หยุดสตรีมวิดีโอเมื่อคอมโพเนนต์ถูกลบ
       if (playerRef.current) {
         playerRef.current.stop();
       }
     };
   }, []);
 
-  // Method to refresh (stop and start) the video stream
   const refreshVideo = () => {
     if (playerRef.current) {
-      playerRef.current.stop(); // Stop the current stream
-      playerRef.current.play(); // Immediately start it again
+      playerRef.current.stop();
+      playerRef.current.play(); // เริ่มเล่นใหม่ทันที
     }
+    setBlink(true);
+    setTimeout(() => setBlink(false), 500); // ลบคลาส blink หลังจาก 0.5 วินาที
   };
 
   return (
-    <div className="full-screen-video-container">
+    <div className={`full-screen-video-container ${blink ? 'blink' : ''}`}>
       <canvas ref={canvasRef} id="canvas"></canvas>
-    
-      <div className="controls">
-        <button onClick={refreshVideo}>Refresh</button>
-      </div>
+      <ServoControl onRefresh={refreshVideo} />
     </div>
   );
 };

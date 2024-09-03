@@ -8,13 +8,13 @@
     top: 27px;
     right: 90px;
     z-index: 4;
-    background-color: #fff;
+    /* background-color: #fff; */
   }
   
   .total-voltage {
     font-size: 1rem;
     color: #000000;
-    margin-right: 10px; /* Space between voltage and battery icon */
+ 
   }
   
   .battery-icon {
