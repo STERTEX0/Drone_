@@ -1,3 +1,4 @@
+// src/component/StatusCard.js
 import React from 'react';
 import './StatusCard.css';
 

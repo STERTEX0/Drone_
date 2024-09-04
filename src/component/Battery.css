@@ -1,10 +1,10 @@
 /* Battery.css */
 
 .battery-container {
+    position: fixed;
     display: flex;
     align-items: center;
-    gap: 10px;
-    position: absolute;
+    gap: 8px;
     top: 27px;
     right: 90px;
     z-index: 4;
@@ -69,7 +69,7 @@
     z-index: 5;
     font-size: 1rem;
     white-space: nowrap;
-    max-width: 300px; /* Increase max-width to accommodate more content */
+    max-width: 320px; /* Increase max-width to accommodate more content */
   }
   
   .battery-tooltip-cell {

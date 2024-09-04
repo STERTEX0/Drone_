@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+// src/component/Log.js
+import React, { useEffect, useState, forwardRef } from 'react';
 import { useWebSocket } from '../context/WebSocketContext';
 import './Log.css';
 
@@ -22,7 +23,7 @@ const formatMessage = (message) => {
   }
 };
 
-const Log = ({ isVisible }) => {
+const Log = forwardRef(({ isVisible }, ref) => {
   const { ws } = useWebSocket();
   const [message, setMessage] = useState({
     mcc: 'N/A',
@@ -42,7 +43,7 @@ const Log = ({ isVisible }) => {
     longitude: 'N/A',
     time: 'N/A',
     total_voltage_percentage: 'N/A',
-  }); // Default to 'N/A'
+  });
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -51,7 +52,7 @@ const Log = ({ isVisible }) => {
       if (newMessage) {
         setMessage((prevMessage) => ({
           ...prevMessage,
-          ...newMessage, // Only update the fields that are present in newMessage
+          ...newMessage,
         }));
       }
     };
@@ -65,7 +66,7 @@ const Log = ({ isVisible }) => {
   }, [ws]);
 
   return (
-    <div className={`log-container ${isVisible ? 'visible' : 'hidden'}`}>
+    <div className={`log-container ${isVisible ? 'visible' : 'hidden'}`} ref={ref}>
       <div className="log-card">
         <div><b>mcc:</b> {message.mcc}</div>
         <div><b>mnc:</b> {message.mnc}</div>
@@ -87,6 +88,6 @@ const Log = ({ isVisible }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Log;

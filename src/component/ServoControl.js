@@ -1,3 +1,4 @@
+// src/component/ServoControl.js
 import React, { useState } from "react";
 import { useWebSocket } from "../context/WebSocketContext";
 import "./ServoControl.css";
@@ -62,13 +63,13 @@ const ServoControl = ({ onRefresh }) => {
             className="btn btn-primary"
             onClick={() => sendCommand("upmax")}
           >
-            สูงสุด
+            เงย
           </button>
           <button
             className="btn btn-primary"
             onClick={() => sendCommand("downmax")}
           >
-            ต่ำสุด
+            ก้ม
           </button>
         </div>
         <div className="extreme-buttons">

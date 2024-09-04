@@ -1,3 +1,4 @@
+// src/component/MapComponent.js
 import React, { useEffect, useState, useRef } from 'react';
 import { GoogleMap, LoadScript, MarkerF, Polyline } from '@react-google-maps/api';
 import { useWebSocket } from '../context/WebSocketContext';

@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useWebSocket } from "../context/WebSocketContext";
-import "./Battery.css";
+// src/component/Battery.js
+import React, { useEffect, useState, useRef } from 'react';
+import { useWebSocket } from '../context/WebSocketContext';
+import './Battery.css';
 
 const Battery = () => {
   const { ws } = useWebSocket();
   const [batteryPercentage, setBatteryPercentage] = useState(100); // Default to 100%
   const [batteryCells, setBatteryCells] = useState([]); // To hold battery cell data
-  const [hoveredCell, setHoveredCell] = useState(false); // Track if any cell is hovered
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false); // Track if the tooltip is visible
   const [totalVoltage, setTotalVoltage] = useState(0); // Default to 0
   const [hasLowPercentageCell, setHasLowPercentageCell] = useState(false); // Track if there's a low percentage cell
+  const batteryRef = useRef(null); // Reference to the Battery component
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -50,6 +52,28 @@ const Battery = () => {
     }
   }, [ws]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isTooltipVisible && batteryRef.current && !batteryRef.current.contains(event.target)) {
+        setIsTooltipVisible(false); // Hide the tooltip when clicking outside
+      }
+    };
+
+    if (isTooltipVisible) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isTooltipVisible]);
+
+  const toggleTooltip = () => {
+    setIsTooltipVisible((prev) => !prev); // Toggle the tooltip visibility
+  };
+
   return (
     <div className="battery-container">
       <span className="total-voltage">
@@ -57,19 +81,16 @@ const Battery = () => {
       </span>
       <div
         className={`battery-icon ${hasLowPercentageCell ? "battery-icon-warning" : ""}`}
-        onMouseEnter={() => setHoveredCell(true)}
-        onMouseLeave={() => setHoveredCell(false)}
+        onClick={toggleTooltip} // Toggle tooltip visibility on click
+        ref={batteryRef}
       >
         <div
           className="battery-level"
           style={{
-            width:
-              typeof batteryPercentage === "number"
-                ? `${batteryPercentage}%`
-                : "0%",
+            width: typeof batteryPercentage === "number" ? `${batteryPercentage}%` : "0%",
           }}
         ></div>
-        {hoveredCell && (
+        {isTooltipVisible && (
           <div className="battery-tooltip">
             {batteryCells.length === 0 ? (
               <div>
@@ -79,8 +100,7 @@ const Battery = () => {
               batteryCells.map((cell) => (
                 <div key={cell.cell} className="battery-tooltip-cell">
                   <div>
-                    Cell {cell.cell}: Voltage: {cell.voltage}V Percentage:{" "}
-                    {cell.percentage}%
+                    Cell {cell.cell}: Voltage: {cell.voltage}V Percentage: {cell.percentage}%
                   </div>
                 </div>
               ))
@@ -89,9 +109,7 @@ const Battery = () => {
         )}
       </div>
       <span className="battery-percentage">
-        {batteryPercentage !== null
-          ? `${Math.floor(batteryPercentage)}%`
-          : "N/A"}
+        {batteryPercentage !== null ? `${Math.floor(batteryPercentage)}%` : "N/A"}
       </span>
     </div>
   );
