@@ -58,7 +58,7 @@
   .battery-tooltip {
     position: absolute;
     top: 60px;
-    left: 10%;
+    left: -40px;
     transform: translateX(-50%);
     background-color: #fff;
     color: #000;
