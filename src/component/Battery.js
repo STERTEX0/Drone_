@@ -100,7 +100,7 @@ const Battery = () => {
               batteryCells.map((cell) => (
                 <div key={cell.cell} className="battery-tooltip-cell">
                   <div>
-                    Cell {cell.cell}: Voltage: {cell.voltage}V Percentage: {cell.percentage}%
+                    <b>Cell</b> {cell.cell}: <b>Voltage:</b> {cell.voltage.toFixed(2)}V <b>Percentage:</b> {cell.percentage}%
                   </div>
                 </div>
               ))

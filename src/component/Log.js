@@ -65,6 +65,9 @@ const Log = forwardRef(({ isVisible }, ref) => {
     }
   }, [ws]);
 
+  // Handle the time display
+  const formattedTime = message.time && message.time.includes('T') ? message.time.split('T')[1].split('.')[0] : 'N/A';
+
   return (
     <div className={`log-container ${isVisible ? 'visible' : 'hidden'}`} ref={ref}>
       <div className="log-card">
@@ -81,9 +84,9 @@ const Log = forwardRef(({ isVisible }, ref) => {
         <div><b>rsrq:</b> {message.rsrq}</div>
         <div><b>rssi:</b> {message.rssi}</div>
         <div><b>sinr:</b> {message.sinr}</div>
-        <div><b>latitude:</b> {message.latitude}</div>
-        <div><b>longitude:</b> {message.longitude}</div>
-        <div><b>time:</b> {message.time}</div> 
+        <div><b>lat:</b> {parseFloat(message.latitude).toFixed(6)}</div>
+        <div><b>long:</b> {parseFloat(message.longitude).toFixed(6)}</div>
+        <div><b>time:</b> {formattedTime}</div>
         <div><b>battery:</b> {message.total_voltage_percentage}</div> 
       </div>
     </div>

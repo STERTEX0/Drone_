@@ -1,4 +1,8 @@
 /* App.css */
+@font-face {
+  font-family: 'kanit';
+  src: url(./assets/fonts/Kanit/Kanit-Regular.ttf);
+}
 
 .app-container {
   display: flex;

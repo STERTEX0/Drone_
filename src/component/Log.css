@@ -2,11 +2,12 @@
 
 .log-container {
     position: fixed;
+    font-size: 1rem;
     right: 30px;
     top: 40%;
     transform: translateY(-50%);
     width: 100%;
-    max-width: 300px;
+    max-width: 200px;
     height: auto;
     max-height: 80vh;
     overflow-y: auto;
@@ -32,21 +33,21 @@
   /* Media queries for responsive design */
   @media (max-width: 1024px) {
     .log-container {
-      max-width: 300px;
+      max-width: 200px;
       max-height: 70vh;
     }
   }
   
   @media (max-width: 768px) {
     .log-container {
-      max-width: 300px;
+      max-width: 200px;
       max-height: 60vh;
     }
   }
   
   @media (max-width: 480px) {
     .log-container {
-      max-width: 300px;
+      max-width: 200px;
       max-height: 60vh;
       padding: 10px;
     }

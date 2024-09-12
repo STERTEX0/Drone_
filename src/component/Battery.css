@@ -90,7 +90,7 @@
 
 @media (max-width: 768px) {
   .battery-tooltip {
-    font-size: 1.4rem; /* Even larger font size */
+    font-size: 1rem;
     max-width: 350px; /* Further increased width */
     padding: 25px; /* Further increased padding */
   }
