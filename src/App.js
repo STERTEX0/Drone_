@@ -4,7 +4,7 @@ import RssiLevel from "./component/RssiLevel";
 import ServoControl from "./component/ServoControl";
 import { WebSocketProvider } from "./context/WebSocketContext";
 import Log from "./component/Log";
-// import VdoFeed from './component/VdoFeed';
+import VdoFeed from './component/VdoFeed';
 import "./App.css";
 import Battery from "./component/Battery";
 import StatusCard from "./component/StatusCard";
@@ -19,7 +19,7 @@ function App() {
           <RssiLevel />
           <Log />
           <Battery />
-          {/* <VdoFeed /> */}
+          <VdoFeed />
           <StatusCard />
           <MapComponent />
         </div>
